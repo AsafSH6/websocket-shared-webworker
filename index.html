@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket Webservice POC</title>
+</head>
+<body>
+    <img />
+</body>
+<script>
+    const image = document.querySelector('img');
+
+    const eventHandler = (action) => {
+        switch (action.type) {
+            case "WORKER_READY": {
+                console.log('Worker is ready.')
+                break;
+            }
+            case "FRAME": {
+                image.src = `data:image/png;base64, ${action.content}`;
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    const broadcastChannel = new BroadcastChannel('WebsocketChannel');
+    broadcastChannel.addEventListener('message', (event) => {
+        eventHandler(event.data);
+    });
+
+    function startWorker() {
+        const worker = new SharedWorker('worker.js');
+        worker.port.start();
+        return worker;
+    }
+
+    const worker = startWorker();
+    worker.port.onmessage = function (event) {
+        if (event.data.type) {
+            eventHandler(event.data);
+        }
+    }
+
+</script>
+</html>
