@@ -30,10 +30,9 @@ onconnect = function (event) {
     port.onmessage = function (e) {
         if (ws && !ws.closed) {
             ws.send(e.data);
-            port.postMessage(`Sent message to server ${e.data}`);
         }
         else {
-            port.postMessage('Failed to send message, websocket closed: ', ws.closed);
+            port.postMessage('Failed to send message - websocket closed');
         }
     }
     startWebsocket(() => {
