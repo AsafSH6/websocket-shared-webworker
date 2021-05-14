@@ -42,7 +42,7 @@ setInterval(() => {
         index++
     })
     // Video length is 53 seconds.
-}, (53 * 100000) / chunks.length)
+}, (53 * 1000) / chunks.length)
 
 
 app.listen(5000, () => {
