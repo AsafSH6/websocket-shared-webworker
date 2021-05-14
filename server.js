@@ -36,9 +36,9 @@ wss.on('connection', (client) => {
 
 
 setInterval(() => {
-    index = index % frames.length
-    index++
     const frame = frames[index]
+    index++
+    index = index % frames.length
     wss.clients.forEach((client) => {
         client.send(JSON.stringify({
             type: 'FRAME',
