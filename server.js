@@ -16,7 +16,7 @@ app.get('/', function(request, response){
 
 let index = 0
 const images = path.join(__dirname, 'images')
-const chunks = fs.readdirSync(images)
+const frames = fs.readdirSync(images)
     .sort((a, b) => Number(a.replace('.jpg', '')) - Number(b.replace('.jpg', '')))
     .map(file => fs.readFileSync(path.join(images, file), {encoding: 'base64'}));
 
@@ -36,13 +36,17 @@ wss.on('connection', function connection(ws) {
 
 
 setInterval(() => {
+    index = index % frames.length
+    index++
+    const frame = frames[index]
     wss.clients.forEach((client) => {
-        index = index % chunks.length;
-        client.send(JSON.stringify({type: 'FRAME', content: chunks[index]}))
-        index++
+        client.send(JSON.stringify({
+            type: 'FRAME',
+            content: frame
+        }))
     })
     // Video length is 53 seconds.
-}, (53 * 1000) / chunks.length)
+}, (53 * 1000) / frames.length)
 
 
 app.listen(5000, () => {
