@@ -1,41 +1,41 @@
-let ws = null;
-let reconnectIntervalId = null;
-const broadcastChannel = new BroadcastChannel("WebsocketChannel");
+let ws = null
+let reconnectIntervalId = null
+const broadcastChannel = new BroadcastChannel("WebsocketChannel")
 
 
 function startWebsocket(cb) {
     if (!ws || ws.closed) {
-        ws = new WebSocket('ws://localhost:8080');
-        ws.onopen = function open() {
-            clearInterval(reconnectIntervalId);
-            cb();
-        };
-
-        ws.onmessage = function onmessage(event) {
-            broadcastChannel.postMessage(JSON.parse(event.data));
+        ws = new WebSocket('ws://localhost:8080')
+        ws.onopen = () => {
+            clearInterval(reconnectIntervalId)
+            cb()
         }
 
-        ws.onclose = function close() {
-            ws = null;
-            reconnectIntervalId = setInterval(startWebsocket, 1000);
-        };
+        ws.onmessage =(event) => {
+            broadcastChannel.postMessage(JSON.parse(event.data))
+        }
+
+        ws.onclose = () => {
+            ws = null
+            reconnectIntervalId = setInterval(startWebsocket, 1000)
+        }
     }
     else {
-        cb();
+        cb()
     }
 }
 
-onconnect = function (event) {
-    const port = event.ports[0];
-    port.onmessage = function (e) {
+onconnect = (event) => {
+    const port = event.ports[0]
+    port.onmessage = (e) => {
         if (ws && !ws.closed) {
-            ws.send(e.data);
+            ws.send(e.data)
         }
         else {
-            port.postMessage('Failed to send message - websocket closed');
+            port.postMessage('Failed to send message - websocket closed')
         }
     }
     startWebsocket(() => {
-        port.postMessage({type: 'WORKER_READY'});
-    });
-};
+        port.postMessage({type: 'WORKER_READY'})
+    })
+}

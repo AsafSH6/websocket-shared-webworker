@@ -8,38 +8,38 @@
     <img />
 </body>
 <script>
-    const image = document.querySelector('img');
+    const image = document.querySelector('img')
 
     const eventHandler = (action) => {
         switch (action.type) {
             case "WORKER_READY": {
                 console.log('Worker is ready.')
-                break;
+                break
             }
             case "FRAME": {
-                image.src = `data:image/png;base64, ${action.content}`;
-                break;
+                image.src = `data:image/png;base64, ${action.content}`
+                break
             }
             default:
-                break;
+                break
         }
     }
 
-    const broadcastChannel = new BroadcastChannel('WebsocketChannel');
-    broadcastChannel.addEventListener('message', (event) => {
-        eventHandler(event.data);
-    });
+    const broadcastChannel = new BroadcastChannel('WebsocketChannel')
+    broadcastChannel.addEventListener('message', function handler(event) {
+        eventHandler(event.data)
+    })
 
     function startWorker() {
-        const worker = new SharedWorker('./static/worker.js');
-        worker.port.start();
-        return worker;
+        const worker = new SharedWorker('./static/worker.js')
+        worker.port.start()
+        return worker
     }
 
-    const worker = startWorker();
+    const worker = startWorker()
     worker.port.onmessage = function (event) {
         if (event.data.type) {
-            eventHandler(event.data);
+            eventHandler(event.data)
         }
     }
 </script>
