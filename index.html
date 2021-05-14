@@ -31,7 +31,7 @@
     });
 
     function startWorker() {
-        const worker = new SharedWorker('worker.js');
+        const worker = new SharedWorker('./static/worker.js');
         worker.port.start();
         return worker;
     }
