@@ -14,5 +14,6 @@ node server.js
 - Server "new websocket connection!" message appears only once
 - Devtools network tab shows that the source of the image is locally
 - Websocket connection is closed only if all tabs are closed
+- Open `chrome://inspect/#workers` to inspect shared worker network traffic
 
 
